@@ -14,21 +14,18 @@ float timeLastDetected0, timeLastDetected1, timeLastDetected2;
 PulseSensorPlayground pulseSensor(PULSE_SENSOR_COUNT);
 
 /* Servo variables */
-/*
-Servo myservo;  // create servo object to control a servo
-int pos = 0;    // variable to store the servo position
-*/
+Servo myservo;           // create servo object to control a servo
+const int SERVO_PIN = 6; // PWM digital pin 6
 
-bool flushing = false;
+bool flushing = false;   // keeps track of whether or not the toilet is currently flushing
+                         // and/or in the middle of refilling
 
 void setup() {   
-
-  /*
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
-  myservo.write(0);
-  delay(2000);        // allow 2 seconds for the servo to get to starting postition
-  */
-
+  myservo.attach(SERVO_PIN); // attaches the servo on pin 6 to the servo object
+  myservo.write(0);          // move servo to 0 degrees
+  delay(250);                // allow 250 ms for the servo to get to starting postition
+  myservo.detach();          // detaches the servo to prevent vibrating and twitching when idle
+  
   Serial.begin(115200);
 
   pulseSensor.analogInput(PULSE_INPUT0, 0);
@@ -39,14 +36,10 @@ void setup() {
   // Check the "pulseSensor" object was created and "began" seeing a signal. 
    if (pulseSensor.begin()) {
     Serial.println("We created the pulseSensor!");  //This prints one time at Arduino power-up,  or on Arduino reset.  
-  }
-  
+  } 
 }
 
-
-
 void loop() {
-
  /* Update BPM values when a heartbeat is detected */
  if (pulseSensor.sawStartOfBeat(0)){
   bpm0 = pulseSensor.getBeatsPerMinute(0);
@@ -76,7 +69,7 @@ void loop() {
   
   printBPMData(); // prints BPM data to serial monitor
 
-  if (averageBPM >= 30){ // average BPM that needs to be met to trigger flush
+  if (averageBPM >= 90){ // average BPM that needs to be met to trigger flush
     if (!flushing) { // only flush if it's not already flushing
       Serial.println("Flushing");
       flushing = true;
@@ -90,10 +83,15 @@ void loop() {
 }
 
 void flush() {
-  // myservo.write(180);
-  delay(2000); // allow 2 seconds for servo to flip
-  // myservo.write(0);
-  delay(2000); // allow 2 seconds for servo to return to default position
+  myservo.attach(SERVO_PIN);
+  myservo.write(180);
+  delay(1000);
+  myservo.detach();
+  delay(500);
+  myservo.attach(SERVO_PIN);
+  myservo.write(0);
+  delay(500);
+  myservo.detach();
   delay(10000); // delay also needs to account for water to refill tank, adjust later
 }
 
