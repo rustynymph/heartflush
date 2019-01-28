@@ -1,11 +1,8 @@
-/*
-  Include Servo.h BEFORE you include PusleSensorPlayground.h
-*/
-#include <Servo.h>
-#define USE_ARDUINO_INTERRUPTS true    // Set-up low-level interrupts for most acurate BPM math.
-#include <PulseSensorPlayground.h>     // Includes the PulseSensorPlayground Library.   
+#include <Servo.h>                   // Include Servo.h BEFORE you include PusleSensorPlayground.h
+#define USE_ARDUINO_INTERRUPTS true  // Set-up low-level interrupts for most acurate BPM math.
+#include <PulseSensorPlayground.h>   // Includes the PulseSensorPlayground Library.   
 
-// Pulse sensor variables
+/* Pulse sensor variables */
 const int PULSE_SENSOR_COUNT = 3;
 const int PULSE_INPUT0 = A0;      // ANALOG PIN 0
 const int PULSE_INPUT1 = A1;      // ANALOG PIN 1
@@ -16,7 +13,7 @@ float averageBPM = -1.0;
 float timeLastDetected0, timeLastDetected1, timeLastDetected2;
 PulseSensorPlayground pulseSensor(PULSE_SENSOR_COUNT);
 
-// Servo variables
+/* Servo variables */
 /*
 Servo myservo;  // create servo object to control a servo
 int pos = 0;    // variable to store the servo position
@@ -29,7 +26,7 @@ void setup() {
   /*
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
   myservo.write(0);
-  delay(1000);        // allow 1 second for the servo to get back to starting postition
+  delay(2000);        // allow 2 seconds for the servo to get to starting postition
   */
 
   Serial.begin(115200);
@@ -76,16 +73,10 @@ void loop() {
   }  
 
   averageBPM = (bpm0 + bpm1 + bpm2) / 3;
-  Serial.print("bpm0: ");                         
-  Serial.println(bpm0);
-  Serial.print("bpm1: ");                         
-  Serial.println(bpm1);
-  Serial.print("bpm2: ");                         
-  Serial.println(bpm2);    
-  Serial.print("Average BPM: ");                         
-  Serial.println(averageBPM);
+  
+  printBPMData(); // prints BPM data to serial monitor
 
-  if (averageBPM >= 30){
+  if (averageBPM >= 30){ // average BPM that needs to be met to trigger flush
     if (!flushing) { // only flush if it's not already flushing
       Serial.println("Flushing");
       flushing = true;
@@ -94,18 +85,28 @@ void loop() {
     }
   }
   
-  delay(20);                    // considered best practice in a simple sketch.
+  delay(20);
 
 }
 
 void flush() {
   // myservo.write(180);
-  delay(2000); 
+  delay(2000); // allow 2 seconds for servo to flip
   // myservo.write(0);
-  delay(2000); 
-
-  // delay also needs to account for water to refill tank, adjust later
-  delay (10000);
+  delay(2000); // allow 2 seconds for servo to return to default position
+  delay(10000); // delay also needs to account for water to refill tank, adjust later
 }
+
+void printBPMData() {
+  Serial.print("bpm0: ");                         
+  Serial.print(bpm0);
+  Serial.print(", bpm1: ");                         
+  Serial.print(bpm1);
+  Serial.print(", bpm2: ");                         
+  Serial.println(bpm2);
+  Serial.print("Average BPM: ");                         
+  Serial.println(averageBPM);
+}
+
 
   
