@@ -5,27 +5,24 @@
 #define USE_ARDUINO_INTERRUPTS true    // Set-up low-level interrupts for most acurate BPM math.
 #include <PulseSensorPlayground.h>     // Includes the PulseSensorPlayground Library.   
 
-
-//  Variables
-const int AnalogPin0 = 0;      // ANALOG PIN 0
-const int AnalogPin1 = 1;      // ANALOG PIN 1
-const int AnalogPin2 = 2;      // ANALOG PIN 2
-const int LED13 = 13;          // The on-board Arduino LED, close to PIN 13.
-int Threshold = 550;           // Determine which Signal to "count as a beat" and which to ignore.
-                               // Use the "Gettting Started Project" to fine-tune Threshold Value beyond default setting.
-                               // Otherwise leave the default "550" value. 
-                               
-PulseSensorPlayground pulseSensor0;  // Create an instance of the first PulseSensorPlayground object
-PulseSensorPlayground pulseSensor1;  // Create an instance of the second PulseSensorPlayground object
-PulseSensorPlayground pulseSensor2;  // Create an instance of the third PulseSensorPlayground object
-
-int personBPM0, personBPM1, personBP2 = 0; // BPM of a person when we know someone is touching the pulse sensor
+// Pulse sensor variables
+const int PULSE_SENSOR_COUNT = 3;
+const int PULSE_INPUT0 = A0;      // ANALOG PIN 0
+const int PULSE_INPUT1 = A1;      // ANALOG PIN 1
+const int PULSE_INPUT2 = A2;      // ANALOG PIN 2
+const int THRESHOLD = 550;           // Determine which Signal to "count as a beat" and which to ignore.                          
+int bpm0, bpm1, bpm2 = -1;
+float averageBPM = -1.0;
+float timeLastDetected0, timeLastDetected1, timeLastDetected2;
+PulseSensorPlayground pulseSensor(PULSE_SENSOR_COUNT);
 
 // Servo variables
 /*
 Servo myservo;  // create servo object to control a servo
 int pos = 0;    // variable to store the servo position
 */
+
+bool flushing = false;
 
 void setup() {   
 
@@ -37,30 +34,14 @@ void setup() {
 
   Serial.begin(115200);
 
-  // Configure the first PulseSensor object
-  pulseSensor0.analogInput(AnalogPin0);   
-  pulseSensor0.setThreshold(Threshold);   
-  // pulseSensor0.blinkOnPulse(LED13);       // blink Arduino's LED with heartbeat
-  // Configure the second PulseSensor object
-  pulseSensor1.analogInput(AnalogPin1);   
-  pulseSensor1.setThreshold(Threshold);  
-  // Configure the third PulseSensor object
-  pulseSensor2.analogInput(AnalogPin2);   
-  pulseSensor2.setThreshold(Threshold);  
+  pulseSensor.analogInput(PULSE_INPUT0, 0);
+  pulseSensor.analogInput(PULSE_INPUT1, 1);
+  pulseSensor.analogInput(PULSE_INPUT2, 2);
+  pulseSensor.setThreshold(THRESHOLD); 
 
-  // Check the first "pulseSensor" object was created and "began" seeing a signal. 
-   if (pulseSensor0.begin()) {
-    Serial.println("We created pulseSensor 0!");  //This prints one time at Arduino power-up,  or on Arduino reset.  
-  }
-
-  // Check the second "pulseSensor" object was created and "began" seeing a signal. 
-   if (pulseSensor1.begin()) {
-    Serial.println("We created pulseSensor 1!");  //This prints one time at Arduino power-up,  or on Arduino reset.  
-  }
-
-  // Check the third "pulseSensor" object was created and "began" seeing a signal. 
-   if (pulseSensor2.begin()) {
-    Serial.println("We created pulseSensor 2!");  //This prints one time at Arduino power-up,  or on Arduino reset.  
+  // Check the "pulseSensor" object was created and "began" seeing a signal. 
+   if (pulseSensor.begin()) {
+    Serial.println("We created the pulseSensor!");  //This prints one time at Arduino power-up,  or on Arduino reset.  
   }
   
 }
@@ -69,25 +50,32 @@ void setup() {
 
 void loop() {
 
- int bpm0 = pulseSensor0.getBeatsPerMinute();  // stores bpm of first pulse sensor
- int bpm1 = pulseSensor1.getBeatsPerMinute();  // stores bpm of second pulse sensor
- int bpm2 = pulseSensor2.getBeatsPerMinute();  // stores bpm of third pulse sensor
+ /* Update BPM values when a heartbeat is detected */
+ if (pulseSensor.sawStartOfBeat(0)){
+  bpm0 = pulseSensor.getBeatsPerMinute(0);
+  timeLastDetected0 = millis();
+ }
+ if (pulseSensor.sawStartOfBeat(1)){
+  bpm1 = pulseSensor.getBeatsPerMinute(1);
+  timeLastDetected1 = millis();
+ }
+ if (pulseSensor.sawStartOfBeat(2)){
+  bpm2 = pulseSensor.getBeatsPerMinute(2);
+  timeLastDetected2 = millis();
+ }
 
- if (pulseSensor0.sawStartOfBeat()) {            // Test to see if "a beat happened". 
-   Serial.println("♥  A HeartBeat Happened A0! ");
+  /* Reset BPM to -1 if enough time has passed since reading */
+  if (abs(timeLastDetected0 - millis()) >= 3000){
+    bpm0 = -1;
   }
-  
-  
- if (pulseSensor1.sawStartOfBeat()) {            // Test to see if "a beat happened". 
-   Serial.println("♥  A HeartBeat Happened A1! ");
-  }
-  
-  
- if (pulseSensor2.sawStartOfBeat()) {            // Test to see if "a beat happened". 
-   Serial.println("♥  A HeartBeat Happened A2! ");
-  }
+  if (abs(timeLastDetected1 - millis()) >= 3000){
+    bpm1 = -1;
+  }  
+  if (abs(timeLastDetected2 - millis()) >= 3000){
+    bpm2 = -1;
+  }  
 
-  float averageBPM = (bpm0 + bpm1 + bpm2) / 3;
+  averageBPM = (bpm0 + bpm1 + bpm2) / 3;
   Serial.print("bpm0: ");                         
   Serial.println(bpm0);
   Serial.print("bpm1: ");                         
@@ -97,18 +85,27 @@ void loop() {
   Serial.print("Average BPM: ");                         
   Serial.println(averageBPM);
 
-  if (averageBPM >= 70){
-    Serial.println("Flush");
-    /*
-    myservo.write(180);
-    delay(2000); 
-    myservo.write(0);
-    delay(2000); 
-    */
+  if (averageBPM >= 30){
+    if (!flushing) { // only flush if it's not already flushing
+      Serial.println("Flushing");
+      flushing = true;
+      flush();
+      flushing = false; // finished flushing
+    }
   }
   
   delay(20);                    // considered best practice in a simple sketch.
 
+}
+
+void flush() {
+  // myservo.write(180);
+  delay(2000); 
+  // myservo.write(0);
+  delay(2000); 
+
+  // delay also needs to account for water to refill tank, adjust later
+  delay (10000);
 }
 
   
