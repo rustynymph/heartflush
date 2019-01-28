@@ -4,6 +4,7 @@ Electronics and software created by Annie Kelly ([personal website](http://rusty
 This project encourages people to collaborate to flush a toilet using their heart rates. When the 3 pulse sensors detect heart rates that average within a certain threshold, the servo pulls up on the toilet chain therefore flushing the toilet.
 
 ### Hardware  
+============
 * Arduino Uno  
 * 1 [Servo (Generic High Torque)](https://www.sparkfun.com/products/11965)
 * 3 [Pulse Sensors](https://pulsesensor.com/)
