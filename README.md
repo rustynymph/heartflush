@@ -17,7 +17,9 @@ Uses the Arduino [Servo](https://www.arduino.cc/en/reference/servo) and [PulseSe
 * [flushtest_onstart.ino](./flushtest_onstart.ino) is for testing the flushing only, it will flush the toilet when the Arduino is powered on  
 
 ## Project diagram  
-![Project diagram](./diagram.jpg)
+![Project diagram](./diagram.jpg)  
+  
+The Arduino, servo, and pulse sensors are currently mounted on a 1"x4"x8" piece of wood that rests on top of the toilet tank. The Arduino is powered by 9V DC and the servo is powered externally with 5V DC. The tip of the servo horn is attached to the top of the toilet chain using some jewelry making chain.
 
 ## Wiring schematic  
 ![Wiring schematic](./wiring.jpg)
