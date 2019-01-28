@@ -14,4 +14,7 @@ Uses the Arduino [Servo](https://www.arduino.cc/en/reference/servo) and [PulseSe
 See [heartflush.ino](./heartflush.ino) for the source code.
 
 ### Project diagram  
-![Diagram](./diagram.jpg)
+![Project diagram](./diagram.jpg)
+
+### Wiring schematic  
+![Wiring schematic](./wiring.jpg)
