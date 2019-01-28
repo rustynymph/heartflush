@@ -2,4 +2,4 @@
 
 Heart rate activated toilet flusher
 
-![Diagram](./diagram.png)
+![Diagram](./diagram.jpg)
