@@ -11,7 +11,7 @@ This project encourages people to collaborate to flush a toilet using their hear
 ### Software  
 Uses the Arduino [Servo](https://www.arduino.cc/en/reference/servo) and [PulseSensorPlayground](https://github.com/WorldFamousElectronics/PulseSensorPlayground) libraries.
 
-#### Files
+##### Files
 * [heartflush.ino](./heartflush.ino) is the main Arduino project file for the pulse sensing and toilet flushing  
 * [flushtest_onstart.ino](./flushtest_onstart.ino) is for testing the flushing only, it will flush the toilet when the Arduino is powered on  
 
