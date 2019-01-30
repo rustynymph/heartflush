@@ -9,7 +9,11 @@ const int PULSE_INPUT1 = A1;      // ANALOG PIN 1
 const int PULSE_INPUT2 = A2;      // ANALOG PIN 2
 const int THRESHOLD = 550;           // Determine which Signal to "count as a beat" and which to ignore.                          
 int bpm0, bpm1, bpm2 = -1;
-float averageBPM = -1.0;
+float bpm0Avg, bpm1Avg, bpm2Avg = -1.0;
+int bpm0Vals[3] = {-1.0, -1.0, -1.0};
+int bpm1Vals[3] = {-1.0, -1.0, -1.0};
+int bpm2Vals[3] = {-1.0, -1.0, -1.0};
+float totalAverageBPM = -1.0;
 float timeLastDetected0, timeLastDetected1, timeLastDetected2;
 PulseSensorPlayground pulseSensor(PULSE_SENSOR_COUNT);
 
@@ -41,35 +45,56 @@ void setup() {
 
 void loop() {
  /* Update BPM values when a heartbeat is detected */
- if (pulseSensor.sawStartOfBeat(0)){
+ if (pulseSensor.sawStartOfBeat(0)) {
   bpm0 = pulseSensor.getBeatsPerMinute(0);
   timeLastDetected0 = millis();
+  /* update the array containing the 3 most recent bpm0 readings */
+  bpm0Vals[2] = bpm0Vals[1];
+  bpm0Vals[1] = bpm0Vals[0];    
+  bpm0Vals[0] = bpm0;
  }
- if (pulseSensor.sawStartOfBeat(1)){
+ if (pulseSensor.sawStartOfBeat(1)) {
   bpm1 = pulseSensor.getBeatsPerMinute(1);
   timeLastDetected1 = millis();
+  /* update the array containing the 3 most recent bpm1 readings */
+  bpm1Vals[2] = bpm1Vals[1];
+  bpm1Vals[1] = bpm1Vals[0];    
+  bpm1Vals[0] = bpm1;
  }
- if (pulseSensor.sawStartOfBeat(2)){
+ if (pulseSensor.sawStartOfBeat(2)) {
   bpm2 = pulseSensor.getBeatsPerMinute(2);
   timeLastDetected2 = millis();
+  /* update the array containing the 3 most recent bpm2 readings */
+  bpm2Vals[2] = bpm2Vals[1];
+  bpm2Vals[1] = bpm2Vals[0];    
+  bpm2Vals[0] = bpm2;
  }
 
+  // calculate average of the last 3 bpm readings of each sensor
+  bpm0Avg = (bpm0Vals[0] + bpm0Vals[1] + bpm0Vals[2]) / 3;
+  bpm1Avg = (bpm1Vals[0] + bpm1Vals[1] + bpm1Vals[2]) / 3;
+  bpm2Avg = (bpm2Vals[0] + bpm2Vals[1] + bpm2Vals[2]) / 3;
+
   /* Reset BPM to -1 if enough time has passed since reading */
-  if (abs(timeLastDetected0 - millis()) >= 3000){
+  if (abs(timeLastDetected0 - millis()) >= 3000) {
     bpm0 = -1;
+    bpm0Vals[0] = bpm0Vals[1] = bpm0Vals[2] = -1;
   }
-  if (abs(timeLastDetected1 - millis()) >= 3000){
+  if (abs(timeLastDetected1 - millis()) >= 3000) {
     bpm1 = -1;
+    bpm1Vals[0] = bpm1Vals[1] = bpm1Vals[2] = -1;   
   }  
-  if (abs(timeLastDetected2 - millis()) >= 3000){
+  if (abs(timeLastDetected2 - millis()) >= 3000) {
     bpm2 = -1;
+    bpm2Vals[0] = bpm2Vals[1] = bpm2Vals[2] = -1;   
   }  
 
-  averageBPM = (bpm0 + bpm1 + bpm2) / 3;
+  //totalAverageBPM = (bpm0 + bpm1 + bpm2) / 3;
+  totalAverageBPM = (bpm0Avg + bpm1Avg + bpm2Avg) / 3;
   
   printBPMData(); // prints BPM data to serial monitor
 
-  if (averageBPM >= 90){ // average BPM that needs to be met to trigger flush
+  if (totalAverageBPM >= 90) { // average BPM that needs to be met to trigger flush
     if (!flushing) { // only flush if it's not already flushing
       Serial.println("Flushing");
       flushing = true;
@@ -79,7 +104,6 @@ void loop() {
   }
   
   delay(20);
-
 }
 
 void flush() {
@@ -103,7 +127,7 @@ void printBPMData() {
   Serial.print(", bpm2: ");                         
   Serial.println(bpm2);
   Serial.print("Average BPM: ");                         
-  Serial.println(averageBPM);
+  Serial.println(totalAverageBPM);
 }
 
 
