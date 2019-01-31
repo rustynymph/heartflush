@@ -15,7 +15,7 @@ PulseSensorPlayground pulseSensor(PULSE_SENSOR_COUNT);
 
 /* Servo variables */
 Servo myservo;           // create servo object to control a servo
-const int SERVO_PIN = 6; // PWM digital pin 6
+const int SERVO_PIN = 10; // PWM digital pin 6
 
 bool flushing = false;   // keeps track of whether or not the toilet is currently flushing
                          // and/or in the middle of refilling
