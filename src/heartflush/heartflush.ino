@@ -1,4 +1,5 @@
-#include <Servo.h>                   // Include Servo.h BEFORE you include PusleSensorPlayground.h
+#include <Servo.h>
+                // Include Servo.h BEFORE you include PusleSensorPlayground.h
 #define USE_ARDUINO_INTERRUPTS true  // Set-up low-level interrupts for most acurate BPM math.
 #include <PulseSensorPlayground.h>   // Includes the PulseSensorPlayground Library.   
 
@@ -69,7 +70,7 @@ void loop() {
   
   printBPMData(); // prints BPM data to serial monitor
 
-  if (totalAverageBPM >= 90) { // average BPM that needs to be met to trigger flush
+  if (totalAverageBPM >= 800) { // average BPM that needs to be met to trigger flush
     if (!flushing) { // only flush if it's not already flushing
       Serial.println("Flushing");
       flushing = true;
@@ -91,7 +92,7 @@ void flush() {
   myservo.write(0);
   delay(500);
   myservo.detach();
-  delay(10000); // delay also needs to account for water to refill tank, adjust later
+  delay(5000); // delay also needs to account for water to refill tank, adjust later
 }
 
 void printBPMData() {
