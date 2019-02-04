@@ -1,8 +1,4 @@
 # Heart rate activated toilet flusher
-Electronics and software created by Annie Kelly ([personal website](http://rustynymph.com) / [academic website](http://anniekelly.me)) in collaboration with performance artist [Michelle Ellsworth](http://www.michelleellsworth.com/).
-
-This project encourages people to collaborate to flush a toilet using their heart rates. When the 3 pulse sensors detect heart rates that average within a certain threshold, the servo pulls up on the toilet chain therefore flushing the toilet.
-  
 ![Toilet flushing](./flush.gif)  
 
 ## Hardware  
