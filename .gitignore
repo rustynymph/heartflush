@@ -1,1 +1,3 @@
 *.DS_Store
+src/remote\ version/flush/arduino_secrets.h
+src/remote\ version/pulse/arduino_secrets.h

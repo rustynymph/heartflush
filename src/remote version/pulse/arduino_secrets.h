@@ -1,2 +1,2 @@
-#define SECRET_SSID "Name of your network"
-#define SECRET_PASS "Password of your network"
+#define SECRET_SSID "Your network name"
+#define SECRET_PASS "Your network password"
