@@ -16,6 +16,7 @@ void setup() {
   myservo.detach();          // detaches the servo to prevent vibrating and twitching when idle
   
   Serial.begin(115200);
+  delay(500);
   Serial.println("Flushing");
   flush();
 }
@@ -27,14 +28,14 @@ void loop() {
 void flush() {
   myservo.attach(SERVO_PIN);
   myservo.write(180);
-  delay(1000);
+  delay(2500);
   myservo.detach();
   delay(500);
   myservo.attach(SERVO_PIN);
   myservo.write(0);
   delay(1000);
   myservo.detach();
-  delay(10000); // delay also needs to account for water to refill tank, adjust later
+  delay(20000); // delay also needs to account for water to refill tank, adjust later
 }
 
 
