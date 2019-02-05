@@ -7,7 +7,7 @@ const int PULSE_SENSOR_COUNT = 3;
 const int PULSE_INPUT0 = 0;      // ANALOG PIN 0
 const int PULSE_INPUT1 = A1;      // ANALOG PIN 1
 const int PULSE_INPUT2 = A2;      // ANALOG PIN 2
-const int THRESHOLD = 580;           // Determine which Signal to "count as a beat" and which to ignore.                          
+const int THRESHOLD = 590;           // Determine which Signal to "count as a beat" and which to ignore.                          
 int bpm0, bpm1, bpm2 = -1;
 float bpm0Avg, bpm1Avg, bpm2Avg = -1.0;
 int bpm0Vals[3] = {-1.0, -1.0, -1.0};
@@ -119,7 +119,7 @@ void loop() {
   }  
 
 
-  totalAverageBPM = (bpm0 + bpm1 + bpm2) / 3;
+  totalAverageBPM = (bpm0Avg + bpm1Avg + bpm2Avg) / 3;
   // now takes the average of any of the active pulse sensors, not just all 3
   /*totalAverageBPM = 0;
   int avgCount = 0;
