@@ -8,9 +8,9 @@ voltage at A0 should increase.
 #include <Servo.h>
 
 /* Pressure sensor variables */
-const int FSR_PIN0 = A3; // Pin connected to FSR/resistor divider
-const int FSR_PIN1 = A4; // Pin connected to FSR/resistor divider
-const int FSR_PIN2 = A5; // Pin connected to FSR/resistor divider
+const int FSR_PIN0 = A0; // Pin connected to FSR/resistor divider
+const int FSR_PIN1 = A1; // Pin connected to FSR/resistor divider
+const int FSR_PIN2 = A2; // Pin connected to FSR/resistor divider
 float fsrV0, fsrV1, fsrV2 = 0.0;
 float fsrR0, fsrR1, fsrR2 = 0.0;
 float fsrG0, fsrG1, fsrG2 = 0.0;
@@ -18,7 +18,7 @@ float fsrG0, fsrG1, fsrG2 = 0.0;
 // their value's below:
 const float VCC   = 4.98;   // Measured voltage of Ardunio 5V line
 const float R_DIV = 3230.0; // Measured resistance of 3.3k resistor
-const float FSRR_THRESHOLD = 500.00;
+const float THRESHOLD = 500.00;
 
 /* Servo variables */
 Servo myservo;            // create servo object to control a servo
@@ -61,7 +61,7 @@ void loop() {
     Serial.println("Voltage FSR 2: " + String(fsrV2) + " V");
     Serial.println("Resistance FSR 2: " + String(fsrR2) + " ohms");
   }
-  if (fsrR0 >= FSRR_THRESHOLD && fsrR1 >= FSRR_THRESHOLD && fsrR2 >= FSRR_THRESHOLD) {
+  if (fsrADC0 >= THRESHOLD && fsrADC1 >= THRESHOLD && fsrADC2 >= THRESHOLD) {
     Serial.println("Flushing!");
     flush();
   }
