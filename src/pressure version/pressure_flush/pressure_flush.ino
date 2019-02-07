@@ -18,7 +18,7 @@ float fsrG0, fsrG1, fsrG2 = 0.0;
 // their value's below:
 const float VCC   = 4.98;   // Measured voltage of Ardunio 5V line
 const float R_DIV = 3230.0; // Measured resistance of 3.3k resistor
-const float THRESHOLD = 500.00;
+const float THRESHOLD = 350.00;
 
 /* Servo variables */
 Servo myservo;            // create servo object to control a servo
@@ -41,6 +41,14 @@ void loop() {
   int fsrADC0 = analogRead(FSR_PIN0);
   int fsrADC1 = analogRead(FSR_PIN1);
   int fsrADC2 = analogRead(FSR_PIN2);    
+
+  Serial.print("A0: ");
+  Serial.print(analogRead(fsrADC0));
+  Serial.print(" A1: ");  
+  Serial.print(analogRead(fsrADC1));
+  Serial.print(" A2: ");   
+  Serial.println(analogRead(fsrADC2));
+  
   // If the FSR has no pressure, the resistance will be
   // near infinite. So the voltage should be near 0.
   if (fsrADC0 != 0) {
@@ -70,14 +78,14 @@ void loop() {
 void flush() {
   myservo.attach(SERVO_PIN);
   myservo.write(180);
-  delay(2500);
+  delay(3250);
   myservo.detach();
   delay(500);
   myservo.attach(SERVO_PIN);
   myservo.write(0);
   delay(1000);
   myservo.detach();
-  delay(25000); // delay also needs to account for water to refill tank, adjust later
+  //delay(25000); // delay also needs to account for water to refill tank, adjust later
 }
 
 float calculateVoltage(float fsrADC) {
