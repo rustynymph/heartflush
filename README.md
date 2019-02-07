@@ -1,5 +1,5 @@
 # Heart rate activated toilet flusher
-![Toilet flushing](./flush.gif)  
+![Toilet flushing](./img/flush.gif)  
 
 ## Hardware  
 
