@@ -25,7 +25,7 @@ When the servo is in its default position of 0 degrees it does not pull on the t
 
 ## Wiring schematic  
 ### Pulse activated version  
-![Wiring schematic pulse](./img/wiring.jpg)
+![Wiring schematic pulse](./img/pulseandservo.png)
 
 ### Pressure activated version  
-![Wiring schematic pressure](./img/pressuresensorsandservo.png)
+![Wiring schematic pressure](./img/pressureandservo.png)
