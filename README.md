@@ -24,4 +24,8 @@ The Arduino, servo, and pulse sensors are currently mounted on a 1"x4"x8" piece 
 When the servo is in its default position of 0 degrees it does not pull on the toilet chain and arm, when it is flushing it flips to 180 degrees and tugs on the chain and arm, thus pulling up the toilet flapper and allowing the water in the tank to flush.  
 
 ## Wiring schematic  
-![Wiring schematic](./img/wiring.jpg)
+### Pulse activated version  
+![Wiring schematic pulse](./img/wiring.jpg)
+
+### Pressure activated version  
+![Wiring schematic pressure](./img/pressuresensorsandservo.png)
